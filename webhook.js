@@ -29,47 +29,35 @@ module.exports = async (event) => {
   //   await client.linkRichMenuToUser(event.source.userId, defaultMenuId);
   // }
 
-  // if (event.type === 'follow') {
+  if (event.type === 'follow') {
 
-  //   const echo = [{ type: 'text', text: 'สวัสดี :)' }, mainMenu(user)];
-  //   await client.linkRichMenuToUser(event.source.userId, defaultMenuId);
-  //   return replyMessage(event.replyToken, echo);
-  // } else {
-  //   var custom_order = Object.keys(handler).reverse();
-  //   const data = await models.action.findAndCountAll({
-  //     where: {
-  //       success: false,
-  //     },
-  //     // raw: true,
-  //   })
+    const msg = [{ type: 'text', text: 'สวัสดี :)' }];
+    return replyMessage(event.replyToken, msg);
+  } else {
+    const action = await models.action.findAndCountAll({
+      where: {
+        success: false,
+      },
+      // raw: true,
+    })
 
-  //   data.rows.sort((back, front) => {
-  //     const backorder = custom_order.indexOf(back.job);
-  //     const frontorder = custom_order.indexOf(front.job);
-  //     return frontorder - backorder;
-  //   });
-
-  //   if(data.count > 0) {
-  //     const action = data.rows[0];
-  //     return handler[action.job](event, action, user)
-  //   } else {
-  //     if(event.type === 'postback') {
-  //       const data = parseQueryString(event.postback.data)
-  //       console.log('queryString', data);
-  //       const name = data.name;
-  //       if (name in handler) {
-  //         handler[name](event, null, user)
-  //       } else {
-  //         return replyMessage(event.replyToken, [{ type: 'text', text: 'บางอย่างเกิดผิดพลาด' }, mainMenu(user)]);
-  //       }
-  //     } else {
-  //       const textMsg = event.message.text;
-  //       if (textMsg in textCommand) {
-  //         textCommand[textMsg](event, null, user);
-  //       } else {
-  //         return replyMessage(event.replyToken, mainMenu(user));
-  //       }
-  //     }
-  //   }
-  // }
+    if(action.count > 0) { // have action to do
+      const actionData = data.rows[0];
+      return handler[actionData.job](event, action, user)
+    } else { // no action to do
+      if(event.type === 'postback') {
+        console.log('postback webhook');
+        // const data = parseQueryString(event.postback.data)
+        // console.log('queryString', data);
+        // const name = data.name;
+        // if (name in handler) {
+        //   handler[name](event, null, user)
+        // } else {
+        //   return replyMessage(event.replyToken, [{ type: 'text', text: 'บางอย่างเกิดผิดพลาด' }, mainMenu(user)]);
+        // }
+      } else {
+        // else
+      }
+    }
+  };
 }

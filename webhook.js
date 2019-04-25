@@ -42,16 +42,15 @@ module.exports = async (event) => {
       return handler[actionData.job](event, actionData, user)
     } else { // no action to do
       if(event.type === 'postback') {
-        const data = parseQueryString(event.postback.data)
-        const name = data.name;
-        console.log('data', data);
+        const { name, query } = parseQueryString(event.postback.data)
         if (name in handler) {
-          handler[name](event, null, user)
+          handler[name](event, null, user, query);
         } else {
           return replyMessage(event.replyToken, [{ type: 'text', text: 'บางอย่างเกิดผิดพลาด' }]);
         }
       } else {
         // else
+        return replyMessage(event.replyToken, [{ type: 'text', text: 'line://app/1568430904-l1vn8QGG' }]);
       }
     }
   };

@@ -1,36 +1,30 @@
 // const queryString = require('query-string');
 // const { defaultMenuId } = require('./config');
 const { replyMessage, parseQueryString, client } = require('./helper');
-// const models = require('./models');
-// const handler = require('./handler');
+const { createRichMenu } = require('./helper/createRichMenu');
+const models = require('./models');
+const handler = require('./handler');
 
 module.exports = async (event) => {
   console.log('event log', event);
-  // const [user, created] = await models.line_user.findOrCreate({
-  //   where: {
-  //     lineid: event.source.userId,
-  //   },
-  //   include: [
-  //     {
-  //       model: models.user,
-  //       as: 'user',
-  //       include: {
-  //         model: models.shop,
-  //         as: 'shop',
-  //       }
-  //     }
-  //   ],
-  //   defaults: {
-  //     lineid: event.source.userId,
-  //   }
-  // });
+  const [user, created] = await models.line_user.findOrCreate({
+    where: {
+      lineid: event.source.userId,
+    },
+    // include: {
+    //   model: models.user,
+    //   as: 'user',
+    // },
+    defaults: {
+      lineid: event.source.userId,
+    }
+  });
 
-  // if(created) {
-  //   await client.linkRichMenuToUser(event.source.userId, defaultMenuId);
-  // }
+  if(created) {
+    await client.linkRichMenuToUser(event.source.userId, 'richmenu-b6009976de63aeafa92a5facb3e628d0');
+  }
 
   if (event.type === 'follow') {
-
     const msg = [{ type: 'text', text: 'สวัสดี :)' }];
     return replyMessage(event.replyToken, msg);
   } else {
@@ -41,20 +35,21 @@ module.exports = async (event) => {
       // raw: true,
     })
 
+    console.log('action123', action);
+
     if(action.count > 0) { // have action to do
-      const actionData = data.rows[0];
-      return handler[actionData.job](event, action, user)
+      const actionData = action.rows[0];
+      return handler[actionData.job](event, actionData, user)
     } else { // no action to do
       if(event.type === 'postback') {
-        console.log('postback webhook');
-        // const data = parseQueryString(event.postback.data)
-        // console.log('queryString', data);
-        // const name = data.name;
-        // if (name in handler) {
-        //   handler[name](event, null, user)
-        // } else {
-        //   return replyMessage(event.replyToken, [{ type: 'text', text: 'บางอย่างเกิดผิดพลาด' }, mainMenu(user)]);
-        // }
+        const data = parseQueryString(event.postback.data)
+        const name = data.name;
+        console.log('data', data);
+        if (name in handler) {
+          handler[name](event, null, user)
+        } else {
+          return replyMessage(event.replyToken, [{ type: 'text', text: 'บางอย่างเกิดผิดพลาด' }]);
+        }
       } else {
         // else
       }

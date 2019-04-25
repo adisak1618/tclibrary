@@ -26,11 +26,14 @@ module.exports = {
       price: {
         type: Sequelize.INTEGER
       },
-      cover: {
+      isbn_code: {
         type: Sequelize.STRING
       },
       count: {
         type: Sequelize.INTEGER
+      },
+      cover: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

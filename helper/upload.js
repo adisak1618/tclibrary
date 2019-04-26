@@ -15,23 +15,53 @@ aws.config.update({
 
 const s3 = new aws.S3();
 
+// exports.uploadFromUrl = async (url, name, RequestHeaders) => {
+//   return new Promise(async function(resolve, reject) {  
+//     try {
+//       const { headers, body } = await request({ url, encoding: null, resolveWithFullResponse: true, headers: RequestHeaders });
+//       mimetype = {
+//         'image/jpeg': '.jpg',
+//         'image/png': '.png',
+//       }
+//       const imgType = headers['content-type'];
+//       const filetype = imgType in mimetype ? mimetype[imgType] : '.png';
+//       const result = await s3.upload({
+//         Bucket: 'tcliberry',
+//         Key: `bookcover/${name}${filetype}`,
+//         Body: body, // buffer
+//         ACL: 'public-read',
+//       }).promise();
+//       resolve(result);
+//       // return result;
+//     } catch (error) {
+//       reject(error);
+//       // return error;
+//     }
+//   });
+// });
+
 exports.uploadFromUrl = async (url, name, RequestHeaders) => {
-  try {
-    const { headers, body } = await request({ url, encoding: null, resolveWithFullResponse: true, headers: RequestHeaders });
-    mimetype = {
-      'image/jpeg': '.jpg',
-      'image/png': '.png',
+  return new Promise(async function(resolve, reject) {
+    try {
+      const { headers, body } = await request({ url, encoding: null, resolveWithFullResponse: true, headers: RequestHeaders });
+      mimetype = {
+        'image/jpeg': '.jpg',
+        'image/png': '.png',
+      }
+      console.log(body);
+      const imgType = headers['content-type'];
+      const filetype = imgType in mimetype ? mimetype[imgType] : '.png';
+      const result = await s3.upload({
+        Bucket: 'tcliberry',
+        Key: `bookcover/${name}${filetype}`,
+        Body: body, // buffer
+        ACL: 'public-read',
+      }).promise();
+      resolve(result);
+      // return result;
+    } catch (error) {
+      reject(error);
+      // return error;
     }
-    const imgType = headers['content-type'];
-    const filetype = imgType in mimetype ? mimetype[imgType] : '.png';
-    const result = await s3.upload({
-      Bucket: 'tcliberry',
-      Key: `bookcover/${name}${filetype}`,
-      Body: body, // buffer
-      ACL: 'public-read',
-    }).promise();
-    return result;
-  } catch (error) {
-    return error;
-  }
+  });
 }

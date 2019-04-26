@@ -116,7 +116,6 @@ const handler = {
   page_count: {
     message: () => [{ type: 'text', text: 'จำนวนหน้า?' }],
     func: (event, action) => {
-      console.log('page_count');
       if(event.type === 'message' && event.message.type === 'text' && !isNaN(event.message.text.trim())) {
         return { page_count: event.message.text.trim() }
       }
@@ -203,11 +202,13 @@ const handler = {
   },
   cover: {
     message: () => coverMsg,
-    func: async (event, action) => {
+    func: async (event, action, user) => {
       if(event.type === 'message' && event.message.type === 'image' && event.message.contentProvider.type === 'line') {
         const name = action.data.name || 'unknow';
-        const { key } = await uploadFromUrl(`https://api.line.me/v2/bot/message/${event.message.id}/content`, `${name}-${(new Date()).getTime()}`, { Authorization: `Bearer ${process.env.channelAccessToken}` });
-        return { cover: key };
+        const uploadImage = uploadFromUrl(`https://api.line.me/v2/bot/message/${event.message.id}/content`, `${name}-${(new Date()).getTime()}`, { Authorization: `Bearer ${process.env.channelAccessToken}` });
+        const pushMsg = client.pushMessage(user.lineid, { type: 'text', text: 'รอนิดนึงนะกำลังอัพโหลด....' });
+        const [data] = await Promise.all([uploadImage, pushMsg]);
+        return { cover: data.key };
       } else if (event.type === 'postback' && event.postback.data === 'cancle') {
         return { cover: null };
       }
@@ -215,7 +216,7 @@ const handler = {
   }
 };
 
-const init = async (action = { data: null }, event) => {
+const init = async (action = { data: null }, event, user) => {
   try {
     const requireDataList = ['name', 'writer_id', 'category', 'page_count', 'publisher', 'price', 'isbn_code', 'count', 'cover'];
     const actionData = action.data || {};
@@ -224,7 +225,7 @@ const init = async (action = { data: null }, event) => {
       return handler[RemainingJob[0]].message(); // first time init return first remaining job message
     } else if (RemainingJob.length > 1) {
       if(handler[RemainingJob[0]].func) {
-        const result = await handler[RemainingJob[0]].func(event, action);
+        const result = await handler[RemainingJob[0]].func(event, action, user);
         if(result) {
           action.data = { ...actionData, ...result };
           action.save();
@@ -236,7 +237,7 @@ const init = async (action = { data: null }, event) => {
       const nextMsg = handler[RemainingJob[1]].message();
       return replyMessage(event.replyToken, [...nextMsg]);
     } else {
-      const result = await handler[RemainingJob[0]].func(event, action);
+      const result = await handler[RemainingJob[0]].func(event, action, user);
       if(result) {
         action.data = { ...actionData, ...result };
         action.success = true;
@@ -282,7 +283,7 @@ const init = async (action = { data: null }, event) => {
 module.exports = async (event, action, user, query) => {
   try {
     if (action) {
-      init(action, event);
+      init(action, event, user);
     } else {
       const newAction = await models.action.create({
         job: 'addBook',

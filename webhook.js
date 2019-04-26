@@ -5,7 +5,7 @@ const { uploadFromUrl} = require('./helper/upload');
 const { createRichMenu } = require('./helper/createRichMenu');
 const models = require('./models');
 const handler = require('./handler');
-const { BookTemplate } = require('./handler/messageTemplate');
+const { studentTemplate } = require('./handler/messageTemplate');
 
 module.exports = async (event) => {
   console.log('event log', event);
@@ -36,35 +36,77 @@ module.exports = async (event) => {
       },
       // raw: true,
     })
-    console.log('action.count', action.count);
+    if(event.type === 'postback') {
+      const { name, query } = parseQueryString(event.postback.data)
+      if (name in handler && action.count > 0) {
+        const actionToCancle = action.rows[0];
+        actionToCancle.success = true;
+        actionToCancle.save();
+        return handler[name](event, null, user, query);
+        // return replyMessage(event.replyToken, [{ type: 'text', text: 'ยกเลิกงานก่อนหน้าแล้ว' }]);
+      }
+
+      // new action
+      if (name in handler) {
+        return handler[name](event, null, user, query);
+      }
+      // something else
+      // const msg = {
+      //   "type": "flex",
+      //   "altText": "Flex Message",
+      //   "contents": {
+      //     "type": "bubble",
+      //     "direction": "ltr",
+      //     "header": {
+      //       "type": "box",
+      //       "layout": "vertical",
+      //       "contents": [
+      //         {
+      //           "type": "text",
+      //           "text": "เพิ่มสมาชิก",
+      //           "size": "xl",
+      //           "align": "center",
+      //           "weight": "bold"
+      //         }
+      //       ]
+      //     },
+      //     "body": {
+      //       "type": "box",
+      //       "layout": "vertical",
+      //       "contents": [
+      //         {
+      //           "type": "text",
+      //           "text": "กรุณา เลือกหมวดหมู่ที่เหมาะสมให้กับหนังสือเล่มนี้",
+      //           "align": "center",
+      //           "wrap": true
+      //         }
+      //       ]
+      //     },
+      //     "footer": {
+      //       "type": "box",
+      //       "layout": "horizontal",
+      //       "contents": [
+      //         {
+      //           "type": "button",
+      //           "action": {
+      //             "type": "postback",
+      //             "label": "ลงทะเบียนนักเรียน",
+      //             "displayText": "ลงทะเบียนนักเรียน",
+      //             "data": "registerUser"
+      //           },
+      //           "style": "primary"
+      //         }
+      //       ]
+      //     }
+      //   }
+      // };
+      // return replyMessage(event.replyToken, [msg]);
+      const msg = studentTemplate();
+      return replyMessage(event.replyToken, [msg]);
+    }
     if(action.count > 0) { // have action to do
-      console.log('postback wowowows');
       const actionData = action.rows[0];
       return handler[actionData.job](event, actionData, user)
-    } else { // no action to do
-      if(event.type === 'postback') {
-        const { name, query } = parseQueryString(event.postback.data)
-        if (name in handler) {
-          handler[name](event, null, user, query);
-        } else {
-          return replyMessage(event.replyToken, [{ type: 'text', text: 'บางอย่างเกิดผิดพลาด' }]);
-        }
-      } else {
-        // const msg = BookTemplate({
-        //   cover: 'https://s3-ap-southeast-1.amazonaws.com/tcliberry/bookcover/Jdj-1556289210400.jpg',
-        //   name: 'test',
-        //   category: 'test',
-        //   writer: 'test',
-        //   page_count: 123,
-        //   publisher: 'seed',
-        //   count: 2,
-        //   bookid: 1
-        // });
-        // return replyMessage(event.replyToken, [msg]);
-        // const result = await uploadFromUrl('https://developers.line.biz/assets/images/top/main-visual0-sp.png', 'adisak555');
-        // console.log('s3 upload result', result);
-        // else
-      }
     }
   };
 }

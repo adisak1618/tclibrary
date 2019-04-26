@@ -20,10 +20,13 @@ module.exports = {
       user_class: {
         type: Sequelize.STRING
       },
-      birth_date: {
-        type: Sequelize.DATE
+      age: {
+        type: Sequelize.INTEGER
       },
       tel: {
+        type: Sequelize.STRING
+      },
+      profile_picture: {
         type: Sequelize.STRING
       },
       createdAt: {

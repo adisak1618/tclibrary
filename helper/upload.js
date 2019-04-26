@@ -28,7 +28,7 @@ exports.uploadFromUrl = async (url, name, RequestHeaders) => {
       const filetype = imgType in mimetype ? mimetype[imgType] : '.png';
       const result = await s3.upload({
         Bucket: 'tcliberry',
-        Key: `bookcover/${name}${filetype}`,
+        Key: `${name}${filetype}`,
         Body: body, // buffer
         ACL: 'public-read',
       }).promise();

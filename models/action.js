@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   action.associate = function(models) {
     // associations can be defined here
+    models.action.belongsTo(models.line_user, { as: 'job_owner', foreignKey: 'line_user_id', targetKey: 'id' });
   };
   return action;
 };

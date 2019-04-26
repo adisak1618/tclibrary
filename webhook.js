@@ -1,9 +1,11 @@
 // const queryString = require('query-string');
 // const { defaultMenuId } = require('./config');
 const { replyMessage, parseQueryString, client } = require('./helper');
+const { uploadFromUrl} = require('./helper/upload');
 const { createRichMenu } = require('./helper/createRichMenu');
 const models = require('./models');
 const handler = require('./handler');
+const { BookTemplate } = require('./handler/messageTemplate');
 
 module.exports = async (event) => {
   console.log('event log', event);
@@ -34,10 +36,9 @@ module.exports = async (event) => {
       },
       // raw: true,
     })
-
-    console.log('action123', action);
-
+    console.log('action.count', action.count);
     if(action.count > 0) { // have action to do
+      console.log('postback wowowows');
       const actionData = action.rows[0];
       return handler[actionData.job](event, actionData, user)
     } else { // no action to do
@@ -49,8 +50,20 @@ module.exports = async (event) => {
           return replyMessage(event.replyToken, [{ type: 'text', text: 'บางอย่างเกิดผิดพลาด' }]);
         }
       } else {
+        // const msg = BookTemplate({
+        //   cover: 'https://s3-ap-southeast-1.amazonaws.com/tcliberry/bookcover/Jdj-1556289210400.jpg',
+        //   name: 'test',
+        //   category: 'test',
+        //   writer: 'test',
+        //   page_count: 123,
+        //   publisher: 'seed',
+        //   count: 2,
+        //   bookid: 1
+        // });
+        // return replyMessage(event.replyToken, [msg]);
+        // const result = await uploadFromUrl('https://developers.line.biz/assets/images/top/main-visual0-sp.png', 'adisak555');
+        // console.log('s3 upload result', result);
         // else
-        return replyMessage(event.replyToken, [{ type: 'text', text: 'line://app/1568430904-l1vn8QGG' }]);
       }
     }
   };

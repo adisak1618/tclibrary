@@ -30,7 +30,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       count: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        defaultValue: 1,
       },
       cover: {
         type: Sequelize.STRING

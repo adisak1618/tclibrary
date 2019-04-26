@@ -2,6 +2,8 @@
 require('dotenv').config()
 const line = require('@line/bot-sdk');
 const express = require('express');
+const expressValidator = require('express-validator');
+const cookieParser = require('cookie-parser');
 const handleEvent = require('./webhook');
 const config = require('./line_config');
 const Routes = require('./routes');
@@ -10,6 +12,10 @@ const Routes = require('./routes');
 // about Express itself: https://expressjs.com/
 const app = express();
 app.set('view engine', 'pug')
+app.use(express.static('public'))
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(expressValidator());
 
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
@@ -20,6 +26,7 @@ app.get('/callback', (req, res) => {
 
 app.use('/', Routes);
 app.post('/callback', line.middleware(config), (req, res) => {
+  console.log('hihihi');
   Promise
     .all(req.body.events.map(handleEvent))
     .then((result) => res.json(result))

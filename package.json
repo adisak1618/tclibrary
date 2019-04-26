@@ -7,16 +7,22 @@
   },
   "dependencies": {
     "@line/bot-sdk": "^6.7.0",
-    "cookie-parser": "~1.4.3",
+    "aws-sdk": "^2.443.0",
+    "cookie-parser": "^1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^7.0.0",
     "express": "~4.16.0",
+    "express-validator": "^5.3.1",
     "http-errors": "~1.6.2",
     "jade": "~1.11.0",
     "morgan": "~1.9.0",
+    "multer": "^1.4.1",
+    "multer-s3": "^2.9.0",
     "pg": "^7.10.0",
     "pug": "^2.0.3",
     "query-string": "^6.4.2",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "sequelize": "^5.7.5"
   }
 }

@@ -1,7 +1,23 @@
 extends layout
 
+block head
+  title= 'TC Liberry'
+  script(src='https://d.line-scdn.net/liff/1.0/sdk.js')
+  script(src='/javascripts/categoryliff.js')
 block content
-  h1= title
-  p Welcome to #{title}
-  each value in categories
-    div= value.name
+  div#category
+    section.hero.is-light
+      .hero-body
+        .container
+          h1.title
+            | หมวดหมู่หนังสือ
+          h2.subtitle
+            | คลิกเพื่อเลือก
+    section.section
+      .container
+        .columns.is-multiline
+          each value in categories
+            .column.is-one-third-desktop
+              a.button.is-large.is-fullwidth.categoryitem(data-id=value.id)
+                p #{value.name}
+

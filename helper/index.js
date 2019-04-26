@@ -1,6 +1,7 @@
 const line = require('@line/bot-sdk');
 const config = require('../line_config');
 const queryString = require('query-string');
+const { validationResult } = require('express-validator/check');
 const client = new line.Client(config);
 
 exports.client = client;
@@ -18,3 +19,25 @@ exports.parseQueryString = (str) => {
   }
   return data;
 }
+
+exports.response =  (res, data, errorcode, message) => {
+  if (errorcode === undefined) {
+    res.json(data);
+  } else {
+    res.status(400).json({
+      "errors": {
+        "code": errorcode,
+        "message": message
+      }
+    });
+  }
+};
+
+exports.validateBody = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  } else {
+    next();
+  }
+};

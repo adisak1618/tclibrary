@@ -3,9 +3,9 @@ const models = require('./../models');
 const { Op } = require('sequelize');
 module.exports = async (event, action, user) => {
   try {
-    console.log('book step', action);
     if (action) {
       if (event.type === 'message') {
+        console.log('action12341sa44', action);
         const replyText = event.message.text.trim();
         const book = await models.book.findAll({
           where: {
@@ -21,7 +21,7 @@ module.exports = async (event, action, user) => {
             ]
           }
         });
-        // console.log('book result', book);
+        console.log('book result', book);
         action.success = true;
         if (book.length === 0) {
           action.data = {
@@ -72,7 +72,7 @@ module.exports = async (event, action, user) => {
                         "type": "postback",
                         "label": "เพิ่มเลย",
                         "displayText": "ตกลง",
-                        "data": isNaN(replyText) ? "addBook" : `addBook?isbn=${replyText}`,
+                        "data": isNaN(replyText) ? "addBook" : `addBook?isbn_code=${replyText}`,
                       },
                       "style": "primary"
                     }
@@ -101,23 +101,6 @@ module.exports = async (event, action, user) => {
       });
       return replyMessage(event.replyToken, { type: 'text', text: 'โปรดระบุชื่อหนังสือ หรือ ISBN code' });
     }
-    // if (user.user) {
-    //   const user_card = await models.user_card.findAll({
-    //     where: {
-    //       user_id: user.user.id,
-    //     },
-    //     limit: 9,
-    //     include: [
-    //       {
-    //         model: models.shop,
-    //         as: 'shop',
-    //       }
-    //     ],
-    //   });
-    //   return replyMessage(event.replyToken, myLocaltyCard(user_card));
-    // } else {
-    //   return replyMessage(event.replyToken, { type: 'text', text: '222บางอย่างผิดพลาด โปรดมั่นใจว่าคุณลงทะเบียนร้านค้าแล้ว' });
-    // }
   } catch (e) {
     console.log(e);
   }

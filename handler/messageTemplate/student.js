@@ -102,7 +102,7 @@ module.exports = ({ profile_picture, fullname, user_code, tel, user_class, id })
             "action": {
               "type": "postback",
               "label": "คืน",
-              "data": `return=?user_id=${id}`,
+              "data": `returnBook?user_id=${id}`,
               "displayText": `เริ่มคืนหนังสือให้ ${fullname}`
             },
             "height": "sm",
@@ -113,7 +113,7 @@ module.exports = ({ profile_picture, fullname, user_code, tel, user_class, id })
             "action": {
               "type": "postback",
               "label": "ยืม",
-              "data": `borrow=?user_id=${id}`,
+              "data": `borrowBook?user_id=${id}`,
               "displayText": `เริ่มยืมหนังสือให้ ${fullname}`
             },
             "height": "sm",

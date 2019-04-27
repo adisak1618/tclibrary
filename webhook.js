@@ -8,6 +8,7 @@ const handler = require('./handler');
 const { studentTemplate } = require('./handler/messageTemplate');
 
 module.exports = async (event) => {
+  console.log(event);
   const [user, created] = await models.line_user.findOrCreate({
     where: {
       lineid: event.source.userId,
@@ -35,6 +36,7 @@ module.exports = async (event) => {
     })
     if(event.type === 'postback') {
       const { name, query } = parseQueryString(event.postback.data)
+      console.log('name', name);
       if (name in handler && action.count > 0) {
         const actionToCancle = action.rows[0];
         actionToCancle.success = true;
@@ -47,6 +49,8 @@ module.exports = async (event) => {
       if (name in handler) {
         return handler[name](event, null, user, query);
       }
+
+      console.log('else')
       // something else
       // const msg = {
       //   "type": "flex",

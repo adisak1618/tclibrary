@@ -37,7 +37,7 @@ module.exports = ({ cover, fullname, user_code, bookname }) => {
           },
           {
             "type": "text",
-            "text": "หนังสือที่ยืม",
+            "text": "หนังสือที่คืน",
             "margin": "xl",
             "size": "md",
             "align": "center"
@@ -72,7 +72,7 @@ module.exports = ({ cover, fullname, user_code, bookname }) => {
             "type": "button",
             "action": {
               "type": "postback",
-              "label": "ยืมเลย",
+              "label": "คืนเลย",
               "displayText": "ตกลง",
               "data": "yes"
             },

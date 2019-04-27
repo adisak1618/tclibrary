@@ -240,7 +240,7 @@ module.exports = async (event, action, user, query) => {
       init(action, event, user);
     } else {
       const newAction = await models.action.create({
-        job: 'borrow',
+        job: 'borrowBook',
         success: false,
         step: 0,
         line_user_id: user.id,

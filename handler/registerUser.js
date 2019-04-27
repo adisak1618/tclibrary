@@ -146,8 +146,8 @@ const init = async (action = { data: null }, event, user) => {
         action.success = true;
         action.save();
         const newStuent = await models.user.create(action.data);
-        const { profile_picture, fullname, user_code, tel, user_class } = newStuent;
-        const studentCardMsg = studentTemplate({ profile_picture: `https://s3-ap-southeast-1.amazonaws.com/tcliberry/${profile_picture}`, fullname, user_code, tel, user_class });
+        const { profile_picture, fullname, user_code, tel, user_class, id } = newStuent;
+        const studentCardMsg = studentTemplate({ profile_picture: `https://s3-ap-southeast-1.amazonaws.com/tcliberry/${profile_picture}`, fullname, user_code, tel, user_class, id });
         return replyMessage(event.replyToken, [{ type: 'text', text: 'ดีใจด้วย ลงทะเบียนนักเรียนเสร็จแล้ว' }, studentCardMsg]);
       } else {
         const msg = handler[RemainingJob[0]].message();

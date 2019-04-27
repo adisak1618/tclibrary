@@ -32,9 +32,9 @@ exports.createRichMenu = async () => {
         },
         "action": {
           "type": "postback",
-          "label": "สมัครสมาชิก",
-          "displayText": "สมัครสมาชิก",
-          "data": "registerUser"
+          "label": "ยืมหนังสือ",
+          "displayText": "ยืมหนังสือ",
+          "data": "borrowBook"
         }
       },
       {
@@ -45,14 +45,16 @@ exports.createRichMenu = async () => {
           "height": 405
         },
         "action": {
-          "type": "uri",
-          "label": "เกี่ยวกับเรา",
-          "uri": "https://linecorp.com/"
+          "type": "postback",
+          "label": "คืนหนังสือ",
+          "displayText": "คืนหนังสือ",
+          "data": "returnBook"
         }
       }
     ]
   });
-  const file = await client.setRichMenuImage(newMenuID, fs.createReadStream(path.resolve(__dirname, 'menu.jpg')));
+  const file = await client.setRichMenuImage(newMenuID, fs.createReadStream(path.resolve(__dirname, 'adminmenu.jpg')));
+  console.log('newMenuID222', newMenuID)
   // const setMenu = await client.setDefaultRichMenu(newMenuID);
   // const data = await client.deleteDefaultRichMenu();
   // try {

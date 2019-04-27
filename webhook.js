@@ -22,7 +22,7 @@ module.exports = async (event) => {
     }
   });
   if(created) {
-    await client.linkRichMenuToUser(event.source.userId, 'richmenu-b6009976de63aeafa92a5facb3e628d0');
+    await client.linkRichMenuToUser(event.source.userId, 'richmenu-50c085d05b629654dcd50ace8bf32d20');
   }
   if (event.type === 'follow') {
     const msg = [{ type: 'text', text: 'สวัสดี :)' }];
@@ -36,7 +36,6 @@ module.exports = async (event) => {
     })
     if(event.type === 'postback') {
       const { name, query } = parseQueryString(event.postback.data)
-      console.log('name', name);
       if (name in handler && action.count > 0) {
         const actionToCancle = action.rows[0];
         actionToCancle.success = true;
@@ -50,7 +49,8 @@ module.exports = async (event) => {
         return handler[name](event, null, user, query);
       }
 
-      console.log('else')
+      // console.log('else')
+      // createRichMenu();
       // something else
       // const msg = {
       //   "type": "flex",
@@ -109,5 +109,7 @@ module.exports = async (event) => {
       const actionData = action.rows[0];
       return handler[actionData.job](event, actionData, user)
     }
+    console.log('else')
+    await client.linkRichMenuToUser(event.source.userId, 'richmenu-50c085d05b629654dcd50ace8bf32d20');
   };
 }

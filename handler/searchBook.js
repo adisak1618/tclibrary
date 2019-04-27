@@ -5,7 +5,6 @@ module.exports = async (event, action, user) => {
   try {
     if (action) {
       if (event.type === 'message') {
-        console.log('action12341sa44', action);
         const replyText = event.message.text.trim();
         const book = await models.book.findAll({
           where: {
@@ -21,7 +20,6 @@ module.exports = async (event, action, user) => {
             ]
           }
         });
-        console.log('book result', book);
         action.success = true;
         if (book.length === 0) {
           action.data = {

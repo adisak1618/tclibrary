@@ -26,7 +26,6 @@ app.get('/callback', (req, res) => {
 
 app.use('/', Routes);
 app.post('/callback', line.middleware(config), (req, res) => {
-  console.log('hihihi');
   Promise
     .all(req.body.events.map(handleEvent))
     .then((result) => res.json(result))

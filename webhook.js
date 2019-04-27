@@ -8,7 +8,6 @@ const handler = require('./handler');
 const { studentTemplate } = require('./handler/messageTemplate');
 
 module.exports = async (event) => {
-  console.log('event log', event);
   const [user, created] = await models.line_user.findOrCreate({
     where: {
       lineid: event.source.userId,
@@ -21,11 +20,9 @@ module.exports = async (event) => {
       lineid: event.source.userId,
     }
   });
-
   if(created) {
     await client.linkRichMenuToUser(event.source.userId, 'richmenu-b6009976de63aeafa92a5facb3e628d0');
   }
-
   if (event.type === 'follow') {
     const msg = [{ type: 'text', text: 'สวัสดี :)' }];
     return replyMessage(event.replyToken, msg);
@@ -101,8 +98,8 @@ module.exports = async (event) => {
       //   }
       // };
       // return replyMessage(event.replyToken, [msg]);
-      const msg = studentTemplate();
-      return replyMessage(event.replyToken, [msg]);
+      // const msg = studentTemplate();
+      // return replyMessage(event.replyToken, [msg]);
     }
     if(action.count > 0) { // have action to do
       const actionData = action.rows[0];

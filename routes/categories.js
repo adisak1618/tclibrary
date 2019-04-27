@@ -7,7 +7,6 @@ router.get('/', async (req, res, next) => {
   const categories = await models.category.findAll({
     raw: true,
   });
-  console.log('categories', categories);
   res.render('index', { title: 'Express', categories: categories });
 });
 

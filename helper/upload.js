@@ -23,7 +23,6 @@ exports.uploadFromUrl = async (url, name, RequestHeaders) => {
         'image/jpeg': '.jpg',
         'image/png': '.png',
       }
-      console.log(body);
       const imgType = headers['content-type'];
       const filetype = imgType in mimetype ? mimetype[imgType] : '.png';
       const result = await s3.upload({

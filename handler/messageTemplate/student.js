@@ -1,4 +1,4 @@
-module.exports = ({ profile_picture, fullname, user_code, tel, user_class }) => {
+module.exports = ({ profile_picture, fullname, user_code, tel, user_class, id }) => {
   return {
     "type": "flex",
     "altText": "Flex Message",

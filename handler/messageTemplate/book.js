@@ -151,7 +151,7 @@ module.exports = ({ cover, name, category, writer, page_count, publisher, count,
             "action": {
               "type": "postback",
               "label": "คืน",
-              "data": `return=?id=${bookid}`,
+              "data": `return?book_id=${bookid}`,
               "displayText": `เริ่มยืมหนังสือ ${name}`
             },
             "height": "sm",
@@ -162,7 +162,7 @@ module.exports = ({ cover, name, category, writer, page_count, publisher, count,
             "action": {
               "type": "postback",
               "label": "ยืม",
-              "data": `borrow=?id=${bookid}`,
+              "data": `borrow?book_id=${bookid}`,
               "displayText": `เริ่มคืนหนังสือ ${name}`
             },
             "height": "sm",

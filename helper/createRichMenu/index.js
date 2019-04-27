@@ -54,7 +54,6 @@ exports.createRichMenu = async () => {
   });
   const file = await client.setRichMenuImage(newMenuID, fs.createReadStream(path.resolve(__dirname, 'menu.jpg')));
   // const setMenu = await client.setDefaultRichMenu(newMenuID);
-  console.log('newMenuID', newMenuID);
   // const data = await client.deleteDefaultRichMenu();
   // try {
     // const data = await client.deleteDefaultRichMenu();
@@ -116,7 +115,6 @@ exports.createUserRichMenu = async () => {
   });
   const file = await client.setRichMenuImage(newMenuID, fs.createReadStream(path.resolve(__dirname, 'usermenu.jpg')));
   // const setMenu = await client.setDefaultRichMenu(newMenuID);
-  console.log('newMenuID', newMenuID);
   // const data = await client.deleteDefaultRichMenu();
   // try {
     // const data = await client.deleteDefaultRichMenu();
@@ -205,7 +203,6 @@ exports.createShopRichMenu = async () => {
   });
   const file = await client.setRichMenuImage(newMenuID, fs.createReadStream(path.resolve(__dirname, 'shopmenu.jpg')));
   // const setMenu = await client.setDefaultRichMenu(newMenuID);
-  console.log('newMenuID2', newMenuID);
   // const data = await client.deleteDefaultRichMenu();
   // try {
     // const data = await client.deleteDefaultRichMenu();

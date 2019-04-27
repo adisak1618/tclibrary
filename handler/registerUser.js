@@ -81,7 +81,6 @@ const handler = {
     func: async (event, action) => {
       const msg = event.message.text.trim();
       const result = validateClass(msg)
-      console.log('result', result);
       if(event.type === 'message' && event.message.type === 'text' && !(result instanceof Error)) {
         return { user_class: `ม${event.message.text.trim()}` }
       }

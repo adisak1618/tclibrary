@@ -1,12 +1,13 @@
 const { client, replyMessage } = require('../helper');
 const models = require('./../models');
 const { Op } = require('sequelize');
+const { BooksTemplate } = require('./messageTemplate');
 module.exports = async (event, action, user) => {
   try {
     if (action) {
       if (event.type === 'message') {
         const replyText = event.message.text.trim();
-        const book = await models.book.findAll({
+        const books = await models.book.findAll({
           where: {
             [Op.or]: [
               {
@@ -18,10 +19,21 @@ module.exports = async (event, action, user) => {
                 isbn_code: replyText,
               }
             ]
-          }
+          },
+          include: [
+            {
+              model: models.category,
+              as: 'category',
+            },
+            {
+              model: models.writer,
+              as: 'writer',
+            }
+          ],
+          limit: 9,
         });
         action.success = true;
-        if (book.length === 0) {
+        if (books.length === 0) {
           action.data = {
             text: replyText,
             found: false,
@@ -80,12 +92,41 @@ module.exports = async (event, action, user) => {
             }
           );
         } else {
+          // const { cover, name, category, writer, page_count, publisher, count, id } = book;
+          // const newBookMsg = BookTemplate({
+          //   cover: `https://s3-ap-southeast-1.amazonaws.com/tcliberry/${cover}`,
+          //   name,
+          //   category: category.name,
+          //   writer: writer.name,
+          //   page_count,
+          //   publisher,
+          //   count,
+          //   bookid: id,
+          // })
+          const booksCard = books.map(({ cover, name, category, writer, page_count, publisher, count, id }) => BooksTemplate({
+            cover: `https://s3-ap-southeast-1.amazonaws.com/tcliberry/${cover}`,
+            name,
+            category: category.name,
+            writer: writer.name,
+            page_count,
+            publisher,
+            count,
+            bookid: id,
+          }));
           action.data = {
             text: replyText,
             found: true,
           }
           action.save();
-          return replyMessage(event.replyToken, { type: 'text', text: 'เจอแล้วเดียวมาทำ ' });
+          const msg = {
+            "type": "flex",
+            "altText": "Flex Message",
+            "contents": {
+              "type": "carousel",
+              "contents": booksCard
+            }
+          }
+          return replyMessage(event.replyToken, msg);
         }
       } else {
         return replyMessage(event.replyToken, { type: 'text', text: 'ลองใหม่อีกรอบนะ โปรดระบุชื่อหนังสือ หรือ ISBN code เป็นตัวหนังสือ!' });

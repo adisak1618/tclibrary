@@ -9,12 +9,7 @@ module.exports = ({ profile_picture, fullname, user_code, tel, user_class, id })
         "url": profile_picture,
         "size": "full",
         "aspectRatio": "1:1",
-        "aspectMode": "cover",
-        "action": {
-          "type": "uri",
-          "label": "Line",
-          "uri": "https://linecorp.com/"
-        }
+        "aspectMode": "cover"
       },
       "body": {
         "type": "box",

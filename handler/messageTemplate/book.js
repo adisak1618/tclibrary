@@ -9,12 +9,7 @@ module.exports = ({ cover, name, category, writer, page_count, publisher, count,
         "url": cover,
         "size": "full",
         "aspectRatio": "3:4",
-        "aspectMode": "cover",
-        "action": {
-          "type": "uri",
-          "label": "Line",
-          "uri": "https://linecorp.com/"
-        }
+        "aspectMode": "cover"
       },
       "body": {
         "type": "box",

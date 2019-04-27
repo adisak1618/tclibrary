@@ -242,34 +242,43 @@ const init = async (action = { data: null }, event, user) => {
         action.data = { ...actionData, ...result };
         action.success = true;
         action.save();
-        const newBook = await models.book.create(action.data);
-        const book = await models.book.findOne({
-          where: {
-            id: newBook.id
-          },
-          include: [
-            {
-              model: models.category,
-              as: 'category',
+        const transaction = await models.sequelize.transaction({ autocommit: false });
+        try {
+          const newBook = await models.book.create(action.data, { transaction });
+          // console.log('newBook', newBook);
+          const book = await models.book.findOne({
+            where: {
+              id: newBook.id
             },
-            {
-              model: models.writer,
-              as: 'writer',
-            }
-          ],
-        });
-        const { cover, name, category, writer, page_count, publisher, count, id } = book;
-        const newBookMsg = BookTemplate({
-          cover: `https://s3-ap-southeast-1.amazonaws.com/tcliberry/${cover}`,
-          name,
-          category: category.name,
-          writer: writer.name,
-          page_count,
-          publisher,
-          count,
-          bookid: id,
-        })
-        return replyMessage(event.replyToken, [{ type: 'text', text: 'ดีใจด้วย หนังสือเล่มนี้พร้อมที่จะให้ยืมแล้ว!!!' }, newBookMsg]);
+            transaction,
+            include: [
+              {
+                model: models.category,
+                as: 'category',
+              },
+              {
+                model: models.writer,
+                as: 'writer',
+              }
+            ],
+          });
+          const { cover, name, category, writer, page_count, publisher, count, id } = book;
+          const newBookMsg = BookTemplate({
+            cover: `https://s3-ap-southeast-1.amazonaws.com/tcliberry/${cover}`,
+            name,
+            category: category.name,
+            writer: writer.name,
+            page_count,
+            publisher,
+            count,
+            bookid: id,
+          })
+          replyMessage(event.replyToken, [{ type: 'text', text: 'ดีใจด้วย หนังสือเล่มนี้พร้อมที่จะให้ยืมแล้ว!!!' }, newBookMsg]);
+          await transaction.commit();
+        } catch (error) {
+          replyMessage(event.replyToken, [{ type: 'text', text: 'เกิดปัญหาการอัพโหลดภาพโปรดลองใหม่!!!' }]);
+          transaction.rollback();
+        }
       } else {
         const msg = handler[RemainingJob[0]].message();
         return replyMessage(event.replyToken, [{ type: 'text', text: 'ข้อมูลไม่ถูกต้องโปรดลองใหม่!!!' }, ...msg]);

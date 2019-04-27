@@ -110,7 +110,7 @@ const handler = {
     func: async (event, action, user) => {
       if(event.type === 'message' && event.message.type === 'image' && event.message.contentProvider.type === 'line') {
         const name = action.data.user_code || 'unknow';
-        const uploadImage = uploadFromUrl(`https://api.line.me/v2/bot/message/${event.message.id}/content`, `studentprofile/${name.replace('/','')}-${(new Date()).getTime()}`, { Authorization: `Bearer ${process.env.channelAccessToken}` });
+        const uploadImage = await uploadFromUrl(`https://api.line.me/v2/bot/message/${event.message.id}/content`, `studentprofile/${name.replace('/','')}-${(new Date()).getTime()}`, { Authorization: `Bearer ${process.env.channelAccessToken}` });
         const pushMsg = client.pushMessage(user.lineid, { type: 'text', text: 'รอนิดนึงนะกำลังอัพโหลด....' });
         const [data] = await Promise.all([uploadImage, pushMsg]);
         return { profile_picture: data.key };
